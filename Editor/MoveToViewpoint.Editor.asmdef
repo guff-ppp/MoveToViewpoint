@@ -1,0 +1,20 @@
+{
+    "name": "Reiria.MoveToViewpoint.Editor",
+    "references": [
+        "nadena.dev.ndmf",
+        "nadena.dev.ndmf.vrchat",
+        "Reiria.MoveToViewpoint.Runtime"
+    ],
+    "includePlatforms": [ "Editor" ],
+    "excludePlatforms": [],
+    "autoReferenced": true,
+    "defineConstraints": [ "REIRIA_NDMF_PRESENT" ],
+    "versionDefines": [
+        {
+            "name": "nadena.dev.ndmf",
+            "expression": "",
+            "define": "REIRIA_NDMF_PRESENT"
+        }
+    ],
+    "noEngineReferences": false
+}
