@@ -1,4 +1,5 @@
 using UnityEngine;
+using VRC.SDK3.Avatars.Components;
 using VRC.SDKBase;
 
 namespace Reiria_001.runtime
@@ -21,5 +22,45 @@ namespace Reiria_001.runtime
 
         [Tooltip("applyRootRotation=ON のとき、Root回転にさらに足すローカル回転オフセット")]
         public Quaternion rotationOffset = Quaternion.identity;
+
+
+        /// <summary>
+        /// 座標を ViewPosition に移動します。
+        /// </summary>
+        public void SetViewpoint(VRCAvatarDescriptor vRCAvatarDescriptor, Transform rootTransform)
+        {
+            if (vRCAvatarDescriptor == null || rootTransform == null)
+            {
+                Debug.LogWarning("VRCAvatarDescriptor or rootTransform is null.");
+                return;
+            }
+
+            // VRChatの ViewPosition は「アバターRoot基準のローカル座標」なので、
+            // ワールド座標へは Root位置 + Root回転 * ローカル で変換する。
+            Vector3 WorldViewpointPos = rootTransform.position + rootTransform.rotation * vRCAvatarDescriptor.ViewPosition;
+
+            SetViewpoint(vRCAvatarDescriptor, rootTransform.rotation, WorldViewpointPos);
+        }
+
+        /// <summary>
+        /// 座標を ViewPosition に移動します。
+        /// </summary>
+        public void SetViewpoint(VRCAvatarDescriptor vRCAvatarDescriptor, Quaternion rootRotation, Vector3 WorldViewpointPos)
+        {
+            if (vRCAvatarDescriptor == null)
+            {
+                Debug.LogWarning("VRCAvatarDescriptor is null.");
+                return;
+            }
+
+            // オフセットもRootローカル基準→ワールドへ
+            Vector3 worldOffset = rootRotation * localOffset;
+            transform.position = WorldViewpointPos + worldOffset;
+
+            if (applyRootRotation)
+            {
+                transform.rotation = rootRotation * rotationOffset;
+            }
+        }
     }
 }
