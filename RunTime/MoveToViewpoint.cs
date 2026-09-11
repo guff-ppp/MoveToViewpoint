@@ -27,6 +27,21 @@ namespace Reiria_001.runtime
         /// <summary>
         /// 座標を ViewPosition に移動します。
         /// </summary>
+        public void SetViewPoint()
+        {
+           VRCAvatarDescriptor vRCAvatarDescriptor = GetComponentInParent<VRCAvatarDescriptor>();
+            if (vRCAvatarDescriptor == null)
+            {
+                Debug.LogWarning("VRCAvatarDescriptor not found in parent.");
+                return;
+            }
+            Transform rootTransform = vRCAvatarDescriptor.transform;
+            SetViewpoint(vRCAvatarDescriptor, rootTransform);
+        }
+
+        /// <summary>
+        /// 座標を ViewPosition に移動します。
+        /// </summary>
         public void SetViewpoint(VRCAvatarDescriptor vRCAvatarDescriptor, Transform rootTransform)
         {
             if (vRCAvatarDescriptor == null || rootTransform == null)
@@ -39,19 +54,7 @@ namespace Reiria_001.runtime
             // ワールド座標へは Root位置 + Root回転 * ローカル で変換する。
             Vector3 WorldViewpointPos = rootTransform.position + rootTransform.rotation * vRCAvatarDescriptor.ViewPosition;
 
-            SetViewpoint(vRCAvatarDescriptor, rootTransform.rotation, WorldViewpointPos);
-        }
-
-        /// <summary>
-        /// 座標を ViewPosition に移動します。
-        /// </summary>
-        public void SetViewpoint(VRCAvatarDescriptor vRCAvatarDescriptor, Quaternion rootRotation, Vector3 WorldViewpointPos)
-        {
-            if (vRCAvatarDescriptor == null)
-            {
-                Debug.LogWarning("VRCAvatarDescriptor is null.");
-                return;
-            }
+            Quaternion rootRotation = rootTransform.rotation;
 
             // オフセットもRootローカル基準→ワールドへ
             Vector3 worldOffset = rootRotation * localOffset;
